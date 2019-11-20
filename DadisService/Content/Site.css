@@ -1,0 +1,46 @@
+﻿.divParametro {
+    cursor: pointer;
+    padding-top: 4px;
+    padding-bottom: 4px;
+}
+
+.divInformacion {
+    cursor: pointer;
+}
+
+.row {
+    line-height: 25px;
+}
+
+.columnaCabeceraTabla {
+    text-align: left;
+}
+
+
+@media screen and (min-width: 0px) {
+    .compensarPaddingLeft {
+    }
+}
+
+
+@media screen and (min-width: 780px) {
+    .compensarPaddingLeft {
+        padding-left: 0px;
+    }
+}
+
+
+
+.info {
+    margin-left: 0px;
+}
+
+input {
+    width: 100%;
+}
+
+.textoObligatorio {
+    color: #003c7d;
+    font-weight: bold;
+    font-size: 13px;
+}
