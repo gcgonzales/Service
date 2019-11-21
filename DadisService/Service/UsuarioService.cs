@@ -92,7 +92,7 @@ namespace DadisService.Service
 
             if (resultado > 0) {
 
-                int idGeneradoUsuario = GetLastIdFromTable("usuarios");
+                int idGeneradoUsuario = CommonService.GetLastIdFromTable("usuarios");
                 CrearCredencialesUsuario(idGeneradoUsuario, usuario.Password);
             }
             
@@ -131,7 +131,7 @@ namespace DadisService.Service
 
             if (rowsAffected > 0)
             {
-                resultado = GetLastIdFromTable("historicopasswords");
+                resultado = CommonService.GetLastIdFromTable("historicopasswords");
             }
 
             return resultado;
@@ -156,7 +156,7 @@ namespace DadisService.Service
 
             if (rowsAffected > 0)
             {
-                resultado = GetLastIdFromTable("passwords");
+                resultado = CommonService.GetLastIdFromTable("passwords");
             }
 
             return resultado;
@@ -178,22 +178,6 @@ namespace DadisService.Service
             return resultado;
         }
 
-        public int GetLastIdFromTable(string nombreTabla)
-        {
-            int resultado = 0;
-            string connectionString = ConfigurationManager.AppSettings["ConnectionString"].ToString();
-            Engine engine = new Engine(connectionString);
-            DataTable dtResult = engine.Query("select Id from " + nombreTabla + " order by id desc LIMIT 1 ");
-
-            if (dtResult.Rows.Count > 0)
-            {
-                resultado = int.Parse(dtResult.Rows[0][0].ToString());
-            }
-
-            return resultado;
-        }
-
-
         public int EditarUsuario(Usuario usuario)
         {
             string connectionString = ConfigurationManager.AppSettings["ConnectionString"].ToString();
@@ -207,6 +191,7 @@ namespace DadisService.Service
             comando.Append(", telefono = '" + usuario.Telefono + "'");
             comando.Append(", email = '" + usuario.Email + "'");
             comando.Append(", usuario = '" + usuario.Login + "'");
+            comando.Append(", fechamodificacion =  CURDATE()");
             comando.Append(" where id=" + usuario.Id);
 
             int resultado = engine.Execute(comando.ToString());

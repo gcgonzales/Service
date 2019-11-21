@@ -9,6 +9,10 @@ namespace DadisService.Models
     {
         public int Id { get; set; }
 
+        public string Titulo { get; set; }
+
+        public string TituloPadre { get; set; }
+
         public string Mensaje { get; set; }
 
         public DateTime FechaAlta { get; set; }
@@ -24,9 +28,12 @@ namespace DadisService.Models
 
         public int IdUsuarioBaja { get; set; }
 
-        public int IdMensajeOriginal { get; set; }
+        public int IdMensajePadre { get; set; }
 
+        public string Autor { get; set; }
 
+        public string UltimoAutor { get; set; }
 
+        public DateTime FechaUltimaContestacion { get; set; }
     }
 }
