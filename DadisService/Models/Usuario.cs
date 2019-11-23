@@ -34,6 +34,8 @@ namespace DadisService.Models
 
         public string IncidenciaUsuario { get; set; }
 
+        public string HashKey { get; set; }
+
 
     }
 }

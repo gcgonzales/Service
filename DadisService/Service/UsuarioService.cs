@@ -272,6 +272,10 @@ namespace DadisService.Service
                             resultado.Login = fila["Usuario"].ToString();
                             resultado.Email = fila["Email"].ToString();
                             resultado.Telefono = fila["Telefono"].ToString();
+                             
+                            if (fila["idperfilusuario"].ToString().Equals(ConfigurationManager.AppSettings["idPerfilAdministrador"].ToString()))
+                            { resultado.HashKey = ConfigurationManager.AppSettings["adminKey"].ToString(); }
+
                         }
                         else
                         {

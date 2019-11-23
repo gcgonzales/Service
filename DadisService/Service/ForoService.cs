@@ -21,12 +21,12 @@ namespace DadisService.Service
 
             StringBuilder query = new StringBuilder();
 
-            query.Append("select mensajesForo.Id, mensajesForo.Titulo, mensajesForo.Mensaje, mensajesForo.IdMensajePadre ");
+            query.Append("select mensajesForo.Id, mensajesForo.Titulo, mensajesForo.Mensaje, mensajesForo.IdMensajePadre, mensajesForo.FechaAlta ");
             query.Append(" , padre.Titulo as TituloPadre ");
             query.Append(" , autor.Id as IdAutor, autor.Nombres, autor.Apellido1, autor.Apellido2 ");
             query.Append(" , (SELECT MAX(p2.Id) FROM mensajesForo p2 WHERE p2.IdMensajePadre = mensajesForo.Id) as ultimoId ");
             query.Append(" from mensajesForo");
-            query.Append(" inner join mensajesForo padre on mensajesForo.IdMensajePadre = padre.Id ");
+            query.Append(" left join mensajesForo padre on mensajesForo.IdMensajePadre = padre.Id ");
             query.Append(" inner join usuarios autor on mensajesForo.IdUsuarioAlta = autor.Id ");
             query.Append("where mensajesForo.fechabaja is null  ");
 
@@ -49,6 +49,7 @@ namespace DadisService.Service
                 mensajeForoFila.IdUsuarioAlta = int.Parse(dr["IdAutor"].ToString());
                 mensajeForoFila.Mensaje = dr["Mensaje"].ToString();
                 mensajeForoFila.IdMensajePadre = int.Parse(dr["IdMensajePadre"].ToString());
+                mensajeForoFila.FechaAlta = DateTime.Parse(dr["FechaAlta"].ToString());
 
                 MensajeForo ultimoMensaje = GetMensaje(mensajeForoFila.Id);
                 mensajeForoFila.UltimoAutor = ultimoMensaje.Autor;
@@ -69,7 +70,7 @@ namespace DadisService.Service
 
             StringBuilder query = new StringBuilder();
 
-            query.Append("select mensajesForo.Id, mensajesForo.Titulo, mensajesForo.Mensaje, mensajesForo.IdMensajePadre ");
+            query.Append("select mensajesForo.Id, mensajesForo.Titulo, mensajesForo.Mensaje, mensajesForo.IdMensajePadre, mensajesForo.FechaAlta ");
             query.Append(" , padre.Titulo as TituloPadre ");
             query.Append(" , autor.Id as IdAutor, autor.Nombres, autor.Apellido1, autor.Apellido2 ");
             query.Append(" from mensajesForo");
@@ -91,6 +92,7 @@ namespace DadisService.Service
                 mensajeForoFila.Autor = dr["Nombres"].ToString() + " " + dr["Apellido1"].ToString() + " " + dr["Apellido2"].ToString();
                 mensajeForoFila.IdUsuarioAlta = int.Parse(dr["IdAutor"].ToString());
                 mensajeForoFila.Mensaje = dr["Mensaje"].ToString();
+                mensajeForoFila.FechaAlta = DateTime.Parse(dr["FechaAlta"].ToString());
                 mensajeForoFila.IdMensajePadre = int.Parse(dr["IdMensajePadre"].ToString());
                  
                 resultado.Add(mensajeForoFila);
@@ -108,9 +110,9 @@ namespace DadisService.Service
 
             StringBuilder query = new StringBuilder();
 
-            query.Append("select mensajesForo.Id, mensajesForo.Titulo, mensajesForo.Mensaje, mensajesForo.IdMensajePadre ");
+            query.Append("select mensajesForo.Id, mensajesForo.Titulo, mensajesForo.Mensaje, mensajesForo.IdMensajePadre, mensajesForo.FechaAlta ");
             query.Append(" , padre.Titulo as TituloPadre ");
-            query.Append(" , autor.Id as IdAutor, autor.Nombre, autor.Apellido1, autor.Apellido2 ");
+            query.Append(" , autor.Id as IdAutor, autor.Nombres, autor.Apellido1, autor.Apellido2 ");
             query.Append(" from mensajesForo");
             query.Append(" inner join mensajesForo padre on mensajesForo.IdMensajePadre = padre.Id ");
             query.Append(" inner join usuarios autor on mensajesForo.IdUsuarioAlta = autor.Id ");
@@ -124,10 +126,11 @@ namespace DadisService.Service
                 resultado.Id = int.Parse(dr["Id"].ToString());
                 resultado.Titulo = dr["Titulo"].ToString();
                 resultado.TituloPadre = dr["TituloPadre"].ToString();
-                resultado.Autor = dr["Nombre"].ToString() + " " + dr["Apellido1"].ToString() + " " + dr["Apellido2"].ToString();
+                resultado.Autor = dr["Nombres"].ToString() + " " + dr["Apellido1"].ToString() + " " + dr["Apellido2"].ToString();
                 resultado.IdUsuarioAlta = int.Parse(dr["IdAutor"].ToString());
                 resultado.Mensaje = dr["Mensaje"].ToString();
-                resultado.IdMensajePadre = int.Parse(dr["IdMensajePadre"].ToString());  
+                resultado.IdMensajePadre = int.Parse(dr["IdMensajePadre"].ToString());
+                resultado.FechaAlta = DateTime.Parse(dr["FechaAlta"].ToString());
             }
 
             return resultado;
@@ -138,14 +141,18 @@ namespace DadisService.Service
         {
             int idGenerado = 0;
 
+            if (mensaje.IdUsuarioAlta == 0) { mensaje.IdUsuarioAlta = 1; }
+
             string connectionString = ConfigurationManager.AppSettings["ConnectionString"].ToString();
             Engine engine = new Engine(connectionString);
+
+            int idMensajeNuevo = CommonService.GetLastIdFromTable("mensajesForo") + 1;
 
             StringBuilder comando = new StringBuilder();
             comando.Append("insert into mensajesForo ");
             comando.Append(" (titulo, mensaje, idusuarioalta, fechaAlta, idmensajepadre) ");
             comando.Append(" values ");
-            comando.Append(" ('" + mensaje.Titulo + "','" + mensaje.Mensaje + "', "+ mensaje.IdUsuarioAlta + ", CURDATE(), "+mensaje.IdMensajePadre+" ) ");
+            comando.Append(" ('" + mensaje.Titulo + "','" + mensaje.Mensaje + "', "+ mensaje.IdUsuarioAlta + ", CURDATE(), "+(mensaje.IdMensajePadre != 0 ? mensaje.IdMensajePadre : idMensajeNuevo) + " ) ");
 
             int resultado = engine.Execute(comando.ToString());
 

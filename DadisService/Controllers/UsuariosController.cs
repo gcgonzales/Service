@@ -7,6 +7,7 @@ using System.Net;
 using System.Net.Http;
 using System.Web.Http;
 using System.Web.Http.Cors;
+using System.Configuration;
 
 namespace DadisService.Controllers
 {
@@ -134,7 +135,12 @@ namespace DadisService.Controllers
             return true;
         }
 
-
+        [Route("api/Usuarios/GetAdminKey")]
+        [HttpGet]
+        public string GetAdminKey()
+        {
+            return ConfigurationManager.AppSettings["adminKey"].ToString();
+        }
 
 
         [Route("api/Usuarios/Guardar")]
