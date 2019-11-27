@@ -128,11 +128,14 @@ namespace DadisService.Controllers
             return usuario;
         }
 
-        [HttpPost]
-        public bool ReiniciarPassword (string email)
+        [Route("api/Usuarios/ReiniciarPassword")]
+        [HttpGet]
+        public Usuario ReiniciarPassword (string email)
         {
+            UsuarioService usuarioService = new UsuarioService();
+            Usuario resultado = usuarioService.ReiniciarPassword(email);
 
-            return true;
+            return resultado;
         }
 
         [Route("api/Usuarios/GetAdminKey")]

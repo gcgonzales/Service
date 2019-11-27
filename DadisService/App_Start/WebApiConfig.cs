@@ -26,7 +26,14 @@ namespace DadisService
                defaults: new { id = RouteParameter.Optional }
                );
 
-           config.Routes.MapHttpRoute(
+            config.Routes.MapHttpRoute(
+            name: "Cuenta",
+            routeTemplate: "api/Cuenta/{action}" +
+            "/{id}",
+            defaults: new { id = RouteParameter.Optional }
+            );
+
+            config.Routes.MapHttpRoute(
                 name: "DefaultApi",
                 routeTemplate: "api/{controller}" +
                 "/{id}",

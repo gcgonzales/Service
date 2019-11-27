@@ -75,6 +75,121 @@ namespace DadisService.Service
             return resultado;
         }
 
+
+        public Usuario GetUsuarioPorEmail(string email)
+        {
+            Usuario resultado = new Usuario();
+
+            string connectionString = ConfigurationManager.AppSettings["ConnectionString"].ToString();
+            Engine engine = new Engine(connectionString);
+
+            string query = "";
+
+            query = string.Format("select Id,Nombres,Apellido1,Apellido2,Email,Telefono,Usuario from usuarios where email = '{0}' and fechaBaja is NULL", email);
+
+            DataTable table = engine.Query(query);
+
+            if (table != null && table.Rows != null && table.Rows.Count > 0)
+            {
+                resultado.Id = int.Parse(table.Rows[0]["Id"].ToString());
+                resultado.Nombres = table.Rows[0]["Nombres"].ToString();
+                resultado.ApellidoPrimero = table.Rows[0]["Apellido1"].ToString();
+                resultado.ApellidoSegundo = table.Rows[0]["Apellido2"].ToString();
+                resultado.Email = table.Rows[0]["Email"].ToString();
+                resultado.Telefono = table.Rows[0]["Telefono"].ToString();
+                resultado.Login = table.Rows[0]["Usuario"].ToString();
+            }
+            else
+            {
+                resultado.IncidenciaUsuario = "No se ha encontrado usuario con ese E-mail.";
+            }
+
+            return resultado;
+        }
+
+        public Usuario ReiniciarPassword(string email)
+        {
+            Usuario usuariorecuperar = GetUsuarioPorEmail(email);
+            
+            int resultado = 0;
+
+            if (string.IsNullOrEmpty(usuariorecuperar.IncidenciaUsuario))
+            {
+                int resultadoBajaActual = BajaPasswordActual(usuariorecuperar.Id);
+                int idNuevoRegistroPassword = CrearRegistroPassword(usuariorecuperar.Id);
+                string nuevoPassword = GenerarTextPassword(8);
+
+                string connectionString = ConfigurationManager.AppSettings["ConnectionString"].ToString();
+                Engine engine = new Engine(connectionString);
+
+                StringBuilder comando = new StringBuilder();
+                comando.Append("insert into passwords ");
+                comando.Append(" (idhistoricopassword,password) ");
+                comando.Append(string.Format(" values ({0},'{1}') ", idNuevoRegistroPassword, EncryptionService.MD5Hash(nuevoPassword)));
+
+                resultado = engine.Execute(comando.ToString());
+
+                if (resultado > 0)
+                {
+                    CommonService.EnviarCorreo(email, "Tu nueva contraseña es: " + nuevoPassword);
+                }
+
+            }
+            
+            
+            return usuariorecuperar;
+        }
+
+        public int BajaPasswordActual(int idUsuario)
+        {
+            string connectionString = ConfigurationManager.AppSettings["ConnectionString"].ToString();
+            Engine engine = new Engine(connectionString);
+
+            StringBuilder comando = new StringBuilder();
+            comando.Append("update historicopasswords ");
+            comando.Append(" set fechabaja = curdate() ");
+            comando.Append(string.Format(" where fechabaja is null and idusuario={0}", idUsuario));
+
+            int ejecucion = engine.Execute(comando.ToString());
+            
+            return ejecucion;
+        }
+
+        public int CrearRegistroPassword (int idUsuario)
+        {
+            int resultado = 0;
+
+            string connectionString = ConfigurationManager.AppSettings["ConnectionString"].ToString();
+            Engine engine = new Engine(connectionString);
+
+            StringBuilder comando = new StringBuilder();
+            comando.Append("insert into historicopasswords ");
+            comando.Append("(idusuario, fechaalta) ");
+            comando.Append(string.Format(" values ({0},curdate()) ",idUsuario));
+              
+            int ejecucion = engine.Execute(comando.ToString());
+
+            if (ejecucion > 0)
+            {
+                resultado = CommonService.GetLastIdFromTable("historicopasswords");
+            }
+
+            return resultado;
+        }
+
+
+        public string GenerarTextPassword(int length)
+        {
+            const string valid = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890";
+            StringBuilder res = new StringBuilder();
+            Random rnd = new Random();
+            while (0 < length--)
+            {
+                res.Append(valid[rnd.Next(valid.Length)]);
+            }
+            return res.ToString();
+        }
+
         public int CrearUsuario(Usuario usuario)
         {
             int idGenerado = 0;

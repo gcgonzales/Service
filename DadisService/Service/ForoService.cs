@@ -77,7 +77,7 @@ namespace DadisService.Service
             query.Append(" inner join mensajesForo padre on mensajesForo.IdMensajePadre = padre.Id ");
             query.Append(" inner join usuarios autor on mensajesForo.IdUsuarioAlta = autor.Id ");
             query.Append(" where mensajesForo.IdMensajePadre = " + idTemaForo);
-            query.Append(" and mensajesForo.Id <> mensajesForo.IdMensajePadre ");
+           // query.Append(" and mensajesForo.Id <> mensajesForo.IdMensajePadre ");
             query.Append(" and mensajesForo.FechaBaja is null ");
 
             DataTable table = engine.Query(query.ToString());
@@ -131,6 +131,7 @@ namespace DadisService.Service
                 resultado.Mensaje = dr["Mensaje"].ToString();
                 resultado.IdMensajePadre = int.Parse(dr["IdMensajePadre"].ToString());
                 resultado.FechaAlta = DateTime.Parse(dr["FechaAlta"].ToString());
+                resultado.TituloPadre = dr["TituloPadre"].ToString();
             }
 
             return resultado;
