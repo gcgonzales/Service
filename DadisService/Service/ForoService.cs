@@ -28,8 +28,8 @@ namespace DadisService.Service
             query.Append(" from mensajesForo");
             query.Append(" left join mensajesForo padre on mensajesForo.IdMensajePadre = padre.Id ");
             query.Append(" inner join usuarios autor on mensajesForo.IdUsuarioAlta = autor.Id ");
-            query.Append("where mensajesForo.fechabaja is null  ");
-
+            query.Append(" where mensajesForo.fechabaja is null  ");
+            query.Append(" and mensajesForo.Id = mensajesForo.IdMensajePadre ");
             if (!string.IsNullOrEmpty(param))
             {
                 query.Append(" and (titulo like '%" + param + "%' OR mensaje like '%" + param + "%' ");
