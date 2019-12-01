@@ -70,6 +70,9 @@ namespace DadisService.Service
                 resultado.Email = table.Rows[0]["Email"].ToString();
                 resultado.Telefono = table.Rows[0]["Telefono"].ToString();
                 resultado.Login = table.Rows[0]["Usuario"].ToString();
+
+                FotografiaService fotografiaService = new FotografiaService();
+                resultado.Fotografias = fotografiaService.ObtenerFotosUsuario(resultado.Id);
             }
 
             return resultado;
@@ -213,7 +216,7 @@ namespace DadisService.Service
             
             return idGenerado;
         }
-
+        
         public int CrearCredencialesUsuario(int idUsuario, string password)
         {
             int resultado = 0;
@@ -339,9 +342,7 @@ namespace DadisService.Service
             comando.Append(") ");
 
             int resultado = engine.Execute(comando.ToString());
-
-
-
+            
             return resultado;
         }
 
@@ -390,6 +391,9 @@ namespace DadisService.Service
                              
                             if (fila["idperfilusuario"].ToString().Equals(ConfigurationManager.AppSettings["idPerfilAdministrador"].ToString()))
                             { resultado.HashKey = ConfigurationManager.AppSettings["adminKey"].ToString(); }
+
+                            FotografiaService fotografiaService = new FotografiaService();
+                            resultado.Fotografias = fotografiaService.ObtenerFotosUsuario(resultado.Id);
 
                         }
                         else

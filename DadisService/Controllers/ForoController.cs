@@ -79,9 +79,7 @@ namespace DadisService.Controllers
             {
                 mensajeGuardado.Id = value.Id;
                 resultado = foroService.EditarMensajeForo(mensajeGuardado);
-
             }
-
 
             return mensajeGuardado.Id;
         }

@@ -163,7 +163,7 @@ namespace DadisService.Controllers
             usuarioGuardado.Login = value.Login;
             usuarioGuardado.IdUsuarioAlta = value.IdUsuarioAlta;
             usuarioGuardado.Password = value.Password;
-
+           
             UsuarioService usuarioService = new UsuarioService();
 
             if (value.Id == 0)
@@ -174,7 +174,9 @@ namespace DadisService.Controllers
                 resultado = usuarioService.EditarUsuario(usuarioGuardado);
 
             }
-            
+
+            FotografiaService fotografiaService = new FotografiaService();
+            fotografiaService.AdjuntarFotografias(value.Fotografias);
 
             return usuarioGuardado.Id;
         }

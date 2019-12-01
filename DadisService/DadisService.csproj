@@ -170,6 +170,7 @@
     <Compile Include="Controllers\CuentaController.cs" />
     <Compile Include="Controllers\FileController.cs" />
     <Compile Include="Controllers\ForoController.cs" />
+    <Compile Include="Controllers\FotografiaController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\UsuariosController.cs" />
     <Compile Include="Controllers\ValuesController.cs" />
@@ -177,6 +178,7 @@
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Models\Credencial.cs" />
+    <Compile Include="Models\Fotografia.cs" />
     <Compile Include="Models\Imagen.cs" />
     <Compile Include="Models\MensajeForo.cs" />
     <Compile Include="Models\Metadata\ClaseModel.cs" />
@@ -189,6 +191,7 @@
     <Compile Include="Service\CommonService.cs" />
     <Compile Include="Service\EncryptionService.cs" />
     <Compile Include="Service\ForoService.cs" />
+    <Compile Include="Service\FotografiaService.cs" />
     <Compile Include="Service\MetadataService.cs" />
     <Compile Include="Service\UsuarioService.cs" />
   </ItemGroup>

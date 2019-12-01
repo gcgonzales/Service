@@ -29,12 +29,14 @@ namespace DadisService.Models
         public DateTime FechaAlta { get; set; }
 
         public DateTime FechaModificacion { get; set; }
-        
+
         public DateTime FechaBaja { get; set; }
 
         public string IncidenciaUsuario { get; set; }
 
         public string HashKey { get; set; }
+
+        public List<Fotografia> Fotografias { get; set; }
 
 
     }
