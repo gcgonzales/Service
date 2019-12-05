@@ -172,6 +172,7 @@
     <Compile Include="Controllers\ForoController.cs" />
     <Compile Include="Controllers\FotografiaController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
+    <Compile Include="Controllers\QuedadaController.cs" />
     <Compile Include="Controllers\UsuariosController.cs" />
     <Compile Include="Controllers\ValuesController.cs" />
     <Compile Include="Global.asax.cs">
@@ -186,6 +187,7 @@
     <Compile Include="Models\Metadata\MetadataModel.cs" />
     <Compile Include="Models\Metadata\MetodoModel.cs" />
     <Compile Include="Models\Metadata\ParametroMetodoModel.cs" />
+    <Compile Include="Models\Quedada.cs" />
     <Compile Include="Models\Usuario.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Service\CommonService.cs" />
@@ -193,6 +195,7 @@
     <Compile Include="Service\ForoService.cs" />
     <Compile Include="Service\FotografiaService.cs" />
     <Compile Include="Service\MetadataService.cs" />
+    <Compile Include="Service\QuedadaService.cs" />
     <Compile Include="Service\UsuarioService.cs" />
   </ItemGroup>
   <ItemGroup>

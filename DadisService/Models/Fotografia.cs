@@ -11,6 +11,10 @@ namespace DadisService.Models
 
         public int IdUsuario { get; set; }
 
+        public bool EsPrincipal { get; set; }
+
+        public int IdQuedada { get; set; }
+
         public string RutaFoto { get; set; }
 
         public DateTime FechaAlta { get; set; }

@@ -25,9 +25,7 @@ namespace DadisService.Service
             { query = string.Format("select Id,Nombres,Apellido1,Apellido2,Email,Telefono,Usuario from usuarios where nombres like '%{0}%' OR apellido1 like '%{0}%' OR apellido2 like '%{0}%' and fechaBaja is NULL", param); }
             else
             { query = string.Format("select Id,Nombres,Apellido1,Apellido2,Email,Telefono,Usuario from usuarios where fechabaja is null order by fechaalta desc limit 10"); }
-
             
-
             DataTable table = engine.Query(query);
 
             foreach (DataRow dr in table.Rows)
@@ -40,6 +38,10 @@ namespace DadisService.Service
                 usuarioFila.ApellidoSegundo = dr["Apellido2"].ToString();
                 usuarioFila.Email = dr["Email"].ToString();
                 usuarioFila.Telefono = dr["Telefono"].ToString();
+
+                FotografiaService fotografiaService = new FotografiaService();
+                usuarioFila.Fotografias = new List<Fotografia>();
+                usuarioFila.Fotografias.Add(fotografiaService.ObtenerFotoPrincipal(usuarioFila.Id));
 
                 resultado.Add(usuarioFila);
             }
@@ -72,7 +74,7 @@ namespace DadisService.Service
                 resultado.Login = table.Rows[0]["Usuario"].ToString();
 
                 FotografiaService fotografiaService = new FotografiaService();
-                resultado.Fotografias = fotografiaService.ObtenerFotosUsuario(resultado.Id);
+                resultado.Fotografias = fotografiaService.ObtenerFotosUsuario(resultado.Id); 
             }
 
             return resultado;
@@ -101,6 +103,10 @@ namespace DadisService.Service
                 resultado.Email = table.Rows[0]["Email"].ToString();
                 resultado.Telefono = table.Rows[0]["Telefono"].ToString();
                 resultado.Login = table.Rows[0]["Usuario"].ToString();
+
+                FotografiaService fotografiaService = new FotografiaService();
+                resultado.Fotografias = new List<Fotografia>();
+                resultado.Fotografias.Add(fotografiaService.ObtenerFotoPrincipal(resultado.Id));
             }
             else
             {
