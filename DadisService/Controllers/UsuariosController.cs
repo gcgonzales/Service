@@ -167,7 +167,17 @@ namespace DadisService.Controllers
             UsuarioService usuarioService = new UsuarioService();
 
             if (value.Id == 0)
-            { resultado = usuarioService.CrearUsuario(usuarioGuardado); }
+            { resultado = usuarioService.CrearUsuario(usuarioGuardado);
+                value.Id = resultado;
+
+                if (value.Fotografias != null)
+                {
+                    foreach (Fotografia fotografia in value.Fotografias)
+                    {
+                        fotografia.IdUsuario = value.Id;
+                    }
+                }
+            }
             else
             {
                 usuarioGuardado.Id = value.Id;

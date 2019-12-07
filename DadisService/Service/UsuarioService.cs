@@ -216,8 +216,8 @@ namespace DadisService.Service
 
             if (resultado > 0) {
 
-                int idGeneradoUsuario = CommonService.GetLastIdFromTable("usuarios");
-                CrearCredencialesUsuario(idGeneradoUsuario, usuario.Password);
+                idGenerado = CommonService.GetLastIdFromTable("usuarios");
+                CrearCredencialesUsuario(idGenerado, usuario.Password);
             }
             
             return idGenerado;
