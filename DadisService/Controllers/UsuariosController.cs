@@ -150,45 +150,49 @@ namespace DadisService.Controllers
         [HttpPost]
         public int Guardar(Usuario value)
         {
-            Usuario usuarioGuardado = new Usuario();
-
             int resultado = 0;
+            bool validacionToken = CommonService.ProcessTokenHeader(Request);
 
-           // usuarioGuardado.Id = int.Parse(DateTime.Now.Ticks.ToString().Substring(0, 5));
-            usuarioGuardado.Nombres = value.Nombres;
-            usuarioGuardado.ApellidoPrimero = value.ApellidoPrimero;
-            usuarioGuardado.ApellidoSegundo = value.ApellidoSegundo;
-            usuarioGuardado.Telefono = value.Telefono;
-            usuarioGuardado.Email = value.Email;
-            usuarioGuardado.Login = value.Login;
-            usuarioGuardado.IdUsuarioAlta = value.IdUsuarioAlta;
-            usuarioGuardado.Password = value.Password;
-           
-            UsuarioService usuarioService = new UsuarioService();
+            if (validacionToken)
+            {
+                Usuario usuarioGuardado = new Usuario();
+                usuarioGuardado.Nombres = value.Nombres;
+                usuarioGuardado.ApellidoPrimero = value.ApellidoPrimero;
+                usuarioGuardado.ApellidoSegundo = value.ApellidoSegundo;
+                usuarioGuardado.Telefono = value.Telefono;
+                usuarioGuardado.Email = value.Email;
+                usuarioGuardado.Login = value.Login;
+                usuarioGuardado.IdUsuarioAlta = value.IdUsuarioAlta;
+                usuarioGuardado.Password = value.Password;
 
-            if (value.Id == 0)
-            { resultado = usuarioService.CrearUsuario(usuarioGuardado);
-                value.Id = resultado;
+                UsuarioService usuarioService = new UsuarioService();
 
-                if (value.Fotografias != null)
+                if (value.Id == 0)
                 {
-                    foreach (Fotografia fotografia in value.Fotografias)
+                    resultado = usuarioService.CrearUsuario(usuarioGuardado);
+                    value.Id = resultado;
+
+                    if (value.Fotografias != null)
                     {
-                        fotografia.IdUsuario = value.Id;
+                        foreach (Fotografia fotografia in value.Fotografias)
+                        {
+                            fotografia.IdUsuario = value.Id;
+                        }
                     }
                 }
-            }
-            else
-            {
-                usuarioGuardado.Id = value.Id;
-                resultado = usuarioService.EditarUsuario(usuarioGuardado);
+                else
+                {
+                    usuarioGuardado.Id = value.Id;
+                    resultado = usuarioService.EditarUsuario(usuarioGuardado);
+
+                }
+
+                FotografiaService fotografiaService = new FotografiaService();
+                fotografiaService.AdjuntarFotografias(value.Fotografias);
 
             }
 
-            FotografiaService fotografiaService = new FotografiaService();
-            fotografiaService.AdjuntarFotografias(value.Fotografias);
-
-            return usuarioGuardado.Id;
+            return resultado;
         }
 
 

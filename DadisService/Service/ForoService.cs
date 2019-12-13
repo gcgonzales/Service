@@ -50,6 +50,7 @@ namespace DadisService.Service
                 mensajeForoFila.Mensaje = dr["Mensaje"].ToString();
                 mensajeForoFila.IdMensajePadre = int.Parse(dr["IdMensajePadre"].ToString());
                 mensajeForoFila.FechaAlta = DateTime.Parse(dr["FechaAlta"].ToString());
+                mensajeForoFila.RutaFotoAutor = new FotografiaService().ObtenerFotoPrincipal(mensajeForoFila.IdUsuarioAlta).RutaFoto;
 
                 MensajeForo ultimoMensaje = GetMensaje(mensajeForoFila.Id);
                 mensajeForoFila.UltimoAutor = ultimoMensaje.Autor;
@@ -94,7 +95,7 @@ namespace DadisService.Service
                 mensajeForoFila.Mensaje = dr["Mensaje"].ToString();
                 mensajeForoFila.FechaAlta = DateTime.Parse(dr["FechaAlta"].ToString());
                 mensajeForoFila.IdMensajePadre = int.Parse(dr["IdMensajePadre"].ToString());
-                 
+                mensajeForoFila.RutaFotoAutor = new FotografiaService().ObtenerFotoPrincipal(mensajeForoFila.IdUsuarioAlta).RutaFoto; 
                 resultado.Add(mensajeForoFila);
             }
 

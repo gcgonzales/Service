@@ -8,6 +8,10 @@ using System.Configuration;
 using System.Data;
 using System.Text;
 using System.Net.Mail;
+using Microsoft.IdentityModel.Tokens;
+using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
+using System.Net.Http;
 
 namespace DadisService.Service
 {
@@ -48,6 +52,76 @@ namespace DadisService.Service
                 Console.WriteLine("Exception caught in CreateTestMessage2(): {0}",
                     ex.ToString());
             }
+        }
+
+
+        private static string Secret = "XCAP05H6LoKvbRRa/QkqLNMI7cOHguaRyHzyg7n5qEkGjQmtBhz4SzYh4Fqwjyi3KJHlSXKPwVu2+bXr6CtpgQ==";
+
+        public static string GenerarToken(string username, string idPerfil)
+        {
+            byte[] key = Convert.FromBase64String(Secret);
+            SymmetricSecurityKey securityKey = new SymmetricSecurityKey(key);
+            SecurityTokenDescriptor descriptor = new SecurityTokenDescriptor
+            {
+                Subject = new ClaimsIdentity(new[] {
+                      new Claim(ClaimTypes.Name, username), new Claim(ClaimTypes.Role,idPerfil)}),
+                Expires = DateTime.UtcNow.AddMinutes(1440),
+                SigningCredentials = new SigningCredentials(securityKey,
+                SecurityAlgorithms.HmacSha256Signature),
+                Issuer="IssuerDadis",
+                Audience="AudienceDadis"
+            };
+
+            JwtSecurityTokenHandler handler = new JwtSecurityTokenHandler();
+            JwtSecurityToken token = handler.CreateJwtSecurityToken(descriptor);
+
+            return handler.WriteToken(token);
+        }
+
+        public static bool ProcessTokenHeader(HttpRequestMessage request)
+        {
+            var re = request;
+            string token = "";
+            var headers = re.Headers;
+
+            if (headers.Contains("Authorization"))
+            {
+                token = headers.GetValues("Authorization").First();
+            }
+            return ValidarToken(token);
+        }
+
+        private static bool ValidarToken(string token)
+        {
+            byte[] key = Convert.FromBase64String(Secret);
+            SymmetricSecurityKey securityKey = new SymmetricSecurityKey(key);
+
+            TokenValidationParameters validationParameters = new TokenValidationParameters
+                                                            {
+                                                                ValidIssuer = "IssuerDadis",
+                                                                ValidAudience = "AudienceDadis",
+                                                                IssuerSigningKey =  securityKey
+            };
+
+            SecurityToken validatedToken;
+            JwtSecurityTokenHandler handler = new JwtSecurityTokenHandler();
+
+            try
+            {
+                var user = handler.ValidateToken(token, validationParameters, out validatedToken);
+
+                if (user == null)
+                    return false;
+                if (validatedToken == null)
+                    return false;
+
+                return true;
+            }
+            catch (Exception ex)
+            {
+                return false;
+            }
+       
         }
 
     }

@@ -34,7 +34,9 @@ namespace DadisService.Models
 
         public string IncidenciaUsuario { get; set; }
 
-        public string HashKey { get; set; }
+        public string PerfilKey { get; set; }
+
+        public string Token { get; set; } 
 
         public List<Fotografia> Fotografias { get; set; }
 

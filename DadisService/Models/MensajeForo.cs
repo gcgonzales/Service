@@ -32,6 +32,8 @@ namespace DadisService.Models
 
         public string Autor { get; set; }
 
+        public string RutaFotoAutor { get; set; }
+
         public string UltimoAutor { get; set; }
 
         public DateTime FechaUltimaContestacion { get; set; }

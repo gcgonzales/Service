@@ -396,10 +396,14 @@ namespace DadisService.Service
                             resultado.Telefono = fila["Telefono"].ToString();
                              
                             if (fila["idperfilusuario"].ToString().Equals(ConfigurationManager.AppSettings["idPerfilAdministrador"].ToString()))
-                            { resultado.HashKey = ConfigurationManager.AppSettings["adminKey"].ToString(); }
+                            {
+                                resultado.PerfilKey = ConfigurationManager.AppSettings["adminKey"].ToString();
+                            }
 
                             FotografiaService fotografiaService = new FotografiaService();
                             resultado.Fotografias = fotografiaService.ObtenerFotosUsuario(resultado.Id);
+
+                            resultado.Token = CommonService.GenerarToken(resultado.Login, fila["idperfilusuario"].ToString());
 
                         }
                         else
