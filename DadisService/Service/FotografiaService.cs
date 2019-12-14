@@ -43,6 +43,36 @@ namespace DadisService.Service
             return idGenerado;
         }
 
+        public int RegistrarFotoQuedada(Fotografia fotografia)
+        {
+            int idGenerado = 0;
+
+            if (fotografia.IdUsuarioAlta == 0) { fotografia.IdUsuarioAlta = 1; }
+
+            string connectionString = ConfigurationManager.AppSettings["ConnectionString"].ToString();
+            Engine engine = new Engine(connectionString);
+
+            int idRegistroFotografiaNuevo = CommonService.GetLastIdFromTable("fotos") + 1;
+
+            int valorEsPrincipal = 0;
+            if (fotografia.EsPrincipal) valorEsPrincipal = 1;
+
+            StringBuilder comando = new StringBuilder();
+            comando.Append("insert into fotosquedadas ");
+            comando.Append(" (IdQuedada, RutaFoto, idusuarioalta, fechaAlta, esprincipal) ");
+            comando.Append(" values ");
+            comando.Append(" (" + fotografia.IdQuedada + ",'" + fotografia.RutaFoto + "', " + fotografia.IdUsuarioAlta + ", CURDATE()," + valorEsPrincipal + ")");
+
+            int resultado = engine.Execute(comando.ToString());
+
+            if (resultado > 0)
+            {
+                idGenerado = CommonService.GetLastIdFromTable("fotosquedadas");
+            }
+
+            return idGenerado;
+        }
+
         public int BajaFoto(Fotografia fotografia)
         {
             //int idGenerado = 0;
@@ -64,26 +94,30 @@ namespace DadisService.Service
             return resultado;
         }
 
-        public int BajaFotosUsuario(int idUsuario, int idUsuarioBaja)
+
+        public int BajaFotoQuedada(Fotografia fotografia)
         {
             //int idGenerado = 0;
 
-            if (idUsuarioBaja == 0) { idUsuarioBaja = 1; }
+            if (fotografia.IdUsuarioBaja == 0) { fotografia.IdUsuarioBaja = 1; }
 
             string connectionString = ConfigurationManager.AppSettings["ConnectionString"].ToString();
             Engine engine = new Engine(connectionString);
 
-        //    int idRegistroFotografiaNuevo = CommonService.GetLastIdFromTable("fotos") + 1;
+            // int idRegistroFotografiaNuevo = CommonService.GetLastIdFromTable("fotos") + 1;
 
             StringBuilder comando = new StringBuilder();
-            comando.Append("update fotos ");
-            comando.Append(" set fechabaja = curdate(), idusuariobaja= " + idUsuarioBaja);
-            comando.Append(" where idusuario = " + idUsuario);
+            comando.Append("update fotosquedadas ");
+            comando.Append(" set fechabaja = curdate(), idusuariobaja= " + fotografia.IdUsuarioBaja);
+            comando.Append(" where id = " + fotografia.Id);
 
             int resultado = engine.Execute(comando.ToString());
 
             return resultado;
         }
+
+
+      
 
         public List<Fotografia> ObtenerFotosUsuario(int idUsuario)
         {
@@ -144,6 +178,34 @@ namespace DadisService.Service
             return resultado;
         }
 
+        public Fotografia ObtenerFotoPrincipalQuedada(int idQuedada)
+        {
+            Fotografia resultado = new Fotografia();
+
+
+            string connectionString = ConfigurationManager.AppSettings["ConnectionString"].ToString();
+            Engine engine = new Engine(connectionString);
+
+            StringBuilder query = new StringBuilder();
+
+            query.Append("select Id, RutaFoto, EsPrincipal ");
+            query.Append(" from fotosquedadas ");
+            query.Append(" where fechabaja is null  ");
+            query.Append(" and IdQuedada = " + idQuedada + " ");
+            query.Append(" and EsPrincipal = 1");
+
+            DataTable table = engine.Query(query.ToString());
+
+            foreach (DataRow dr in table.Rows)
+            {
+                resultado.Id = int.Parse(dr["Id"].ToString());
+                resultado.RutaFoto = dr["RutaFoto"].ToString();
+                resultado.EsPrincipal = (dr["RutaFoto"].ToString().Equals("1") ? true : false);
+            }
+
+            return resultado;
+        }
+
         public List<Fotografia> ObtenerFotosQuedadas(int idQuedada)
         {
             List<Fotografia> resultado = new List<Fotografia>();
@@ -186,6 +248,25 @@ namespace DadisService.Service
                 else if (foto.Baja)
                 {
                     BajaFoto(foto);
+                }
+            }
+
+            return resultado;
+        }
+
+        public int AdjuntarFotografiasQuedadas(List<Fotografia> fotografias)
+        {
+            int resultado = 0;
+
+            foreach (Fotografia foto in fotografias)
+            {
+                if (foto.Id == 0)
+                {
+                    RegistrarFotoQuedada(foto);
+                }
+                else if (foto.Baja)
+                {
+                    BajaFotoQuedada(foto);
                 }
             }
 

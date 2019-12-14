@@ -15,7 +15,21 @@ namespace DadisService.Models
 
         public string Descripcion { get; set; }
 
+        public string Locacion { get; set; }
+
+        public int MaximoAsistentes { get; set; }
+
+        public DateTime FechaEvento { get; set; }
+
+        public int HoraEvento { get; set; }
+
+        public int MinutoEvento { get; set; }
+
         public string Autor { get; set; }
+
+        public string RutaFotoAutor { get; set; }
+
+        public string RutaFotoPrincipal { get; set; }
 
         public DateTime FechaAlta { get; set; }
 

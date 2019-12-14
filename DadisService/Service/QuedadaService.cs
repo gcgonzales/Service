@@ -45,7 +45,8 @@ namespace DadisService.Service
                 quedadaFila.Autor = dr["Nombres"].ToString() + " " + dr["Apellido1"].ToString() + " " + dr["Apellido2"].ToString();
                 quedadaFila.IdUsuarioAlta = int.Parse(dr["IdUsuarioAlta"].ToString());                
                 quedadaFila.FechaAlta = DateTime.Parse(dr["FechaAlta"].ToString());
-
+                quedadaFila.RutaFotoAutor = new FotografiaService().ObtenerFotoPrincipal(quedadaFila.IdUsuarioAlta).RutaFoto;
+                quedadaFila.RutaFotoPrincipal = new FotografiaService().ObtenerFotoPrincipalQuedada(quedadaFila.Id).RutaFoto;
                 resultado.Add(quedadaFila);
             }
 
@@ -62,7 +63,7 @@ namespace DadisService.Service
 
             StringBuilder query = new StringBuilder();
 
-            query.Append("select quedadas.Id, quedadas.Titulo, quedadas.Mensaje, quedadas.IdMensajePadre, quedadas.FechaAlta ");
+            query.Append("select quedadas.Id, quedadas.Titulo, quedadas.Resumen, quedadas.Descripcion, quedadas.Locacion, quedadas.MaximoAsistentes, quedadas.IdMensajePadre, quedadas.FechaAlta ");
             query.Append(" , autor.Id as IdAutor, autor.Nombres, autor.Apellido1, autor.Apellido2 ");
             query.Append(" from quedadas");
             query.Append(" inner join usuarios autor on quedadas.IdUsuarioAlta = autor.Id ");
@@ -76,6 +77,9 @@ namespace DadisService.Service
                 resultado.Id = int.Parse(dr["Id"].ToString());
                 resultado.Titulo = dr["Titulo"].ToString();
                 resultado.Resumen = dr["Resumen"].ToString();
+                resultado.Descripcion = dr["Descripcion"].ToString();
+                resultado.Locacion = dr["Locacion"].ToString();
+                resultado.MaximoAsistentes = int.Parse(dr["MaximoAsistentes"].ToString());
                 resultado.Autor = dr["Nombres"].ToString() + " " + dr["Apellido1"].ToString() + " " + dr["Apellido2"].ToString();
                 resultado.Descripcion = dr["Descripcion"].ToString();
                 resultado.IdUsuarioAlta = int.Parse(dr["IdAutor"].ToString());
@@ -102,9 +106,9 @@ namespace DadisService.Service
 
             StringBuilder comando = new StringBuilder();
             comando.Append("insert into quedadas ");
-            comando.Append(" (titulo, resumen, descripcion, idusuarioalta, fechaAlta) ");
+            comando.Append(" (titulo, resumen, descripcion, locacion, maximoasistentes, fechaquedada, idusuarioalta, fechaAlta) ");
             comando.Append(" values ");
-            comando.Append(" ('" + quedada.Titulo + "','" + quedada.Resumen + "','" + quedada.Descripcion + "', " + quedada.IdUsuarioAlta + ", CURDATE()) ");
+            comando.Append(" ('" + quedada.Titulo + "','" + quedada.Resumen + "','" + quedada.Descripcion + "', '" + quedada.Locacion  + "', " + quedada.MaximoAsistentes + ", '" +  quedada.FechaEvento + "', " + quedada.IdUsuarioAlta + ", CURDATE()) ");
 
             int resultado = engine.Execute(comando.ToString());
 
