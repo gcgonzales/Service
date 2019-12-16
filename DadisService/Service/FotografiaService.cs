@@ -239,15 +239,17 @@ namespace DadisService.Service
         public int AdjuntarFotografias(List<Fotografia> fotografias) {
             int resultado = 0;
 
-            foreach (Fotografia foto in fotografias)
-            {
-                if (foto.Id == 0)
+            if (fotografias != null) {
+                foreach (Fotografia foto in fotografias)
                 {
-                    RegistrarFoto(foto);
-                }
-                else if (foto.Baja)
-                {
-                    BajaFoto(foto);
+                    if (foto.Id == 0)
+                    {
+                        RegistrarFoto(foto);
+                    }
+                    else if (foto.Baja)
+                    {
+                        BajaFoto(foto);
+                    }
                 }
             }
 
@@ -258,18 +260,21 @@ namespace DadisService.Service
         {
             int resultado = 0;
 
-            foreach (Fotografia foto in fotografias)
+            if (fotografias != null)
             {
-                if (foto.Id == 0)
+                foreach (Fotografia foto in fotografias)
                 {
-                    RegistrarFotoQuedada(foto);
-                }
-                else if (foto.Baja)
-                {
-                    BajaFotoQuedada(foto);
+                    if (foto.Id == 0)
+                    {
+                        RegistrarFotoQuedada(foto);
+                    }
+                    else if (foto.Baja)
+                    {
+                        BajaFotoQuedada(foto);
+                    }
                 }
             }
-
+             
             return resultado;
         }
 

@@ -43,7 +43,9 @@ namespace DadisService.Models
 
         public int IdUsuarioBaja { get; set; }
 
-        public List<Fotografia> Fotografias { get; set; }
+        public List<Fotografia> Fotografias { get; set; } 
+
+        public List<ApuntadoQuedada> Apuntados { get; set; }
       
     }
 }

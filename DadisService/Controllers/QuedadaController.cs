@@ -52,13 +52,15 @@ namespace DadisService.Controllers
             QuedadaService foroService = new QuedadaService();
 
             if (value.Id == 0)
-            { resultado = foroService.CrearQuedada(quedadaGuardado);
+            {
+                resultado = foroService.CrearQuedada(quedadaGuardado);
+                value.Id = resultado;
 
                 if (value.Fotografias != null)
                 {
                     foreach (Fotografia fotografia in value.Fotografias)
                     {
-                        fotografia.IdUsuario = value.Id;
+                        fotografia.IdQuedada = value.Id;
                     }
                 }
 

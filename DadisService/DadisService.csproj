@@ -190,6 +190,7 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Models\ApuntadoQuedada.cs" />
     <Compile Include="Models\Credencial.cs" />
     <Compile Include="Models\Fotografia.cs" />
     <Compile Include="Models\Imagen.cs" />
