@@ -156,7 +156,7 @@ namespace DadisService.Service
 
             StringBuilder comando = new StringBuilder();
             comando.Append("update historicopasswords ");
-            comando.Append(" set fechabaja = curdate() ");
+            comando.Append(" set fechabaja = NOW() ");
             comando.Append(string.Format(" where fechabaja is null and idusuario={0}", idUsuario));
 
             int ejecucion = engine.Execute(comando.ToString());
@@ -174,7 +174,7 @@ namespace DadisService.Service
             StringBuilder comando = new StringBuilder();
             comando.Append("insert into historicopasswords ");
             comando.Append("(idusuario, fechaalta) ");
-            comando.Append(string.Format(" values ({0},curdate()) ",idUsuario));
+            comando.Append(string.Format(" values ({0},NOW()) ",idUsuario));
               
             int ejecucion = engine.Execute(comando.ToString());
 
@@ -210,7 +210,7 @@ namespace DadisService.Service
             comando.Append("insert into usuarios ");
             comando.Append(" (nombres, apellido1, apellido2, usuario, telefono, email, usuarioAlta, fechaAlta) ");
             comando.Append(" values ");
-            comando.Append(" ('"+usuario.Nombres+"','"+usuario.ApellidoPrimero+"','"+usuario.ApellidoSegundo+"','"+usuario.Login+"','"+usuario.Telefono+"','"+usuario.Email+"',1, CURDATE() ) ");
+            comando.Append(" ('"+usuario.Nombres+"','"+usuario.ApellidoPrimero+"','"+usuario.ApellidoSegundo+"','"+usuario.Login+"','"+usuario.Telefono+"','"+usuario.Email+"',1, NOW() ) ");
 
             int resultado = engine.Execute(comando.ToString());
 
@@ -249,7 +249,7 @@ namespace DadisService.Service
             comando.Append("insert into historicopasswords ");
             comando.Append(" (idusuario, fechaalta) ");
             comando.Append(" values ");
-            comando.Append(" ('" + idUsuario + "', CURDATE())");
+            comando.Append(" ('" + idUsuario + "', NOW())");
 
             int rowsAffected = engine.Execute(comando.ToString());
 
@@ -315,7 +315,7 @@ namespace DadisService.Service
             comando.Append(", telefono = '" + usuario.Telefono + "'");
             comando.Append(", email = '" + usuario.Email + "'");
             comando.Append(", usuario = '" + usuario.Login + "'");
-            comando.Append(", fechamodificacion =  CURDATE()");
+            comando.Append(", fechamodificacion =  NOW()");
             comando.Append(" where id=" + usuario.Id);
 
             int resultado = engine.Execute(comando.ToString());
@@ -331,7 +331,7 @@ namespace DadisService.Service
 
             StringBuilder comando = new StringBuilder();
             comando.Append("update usuarios set ");
-            comando.Append("FechaBaja = CURDATE() ");
+            comando.Append("FechaBaja = NOW() ");
             comando.Append(" where id in ");
             comando.Append(" (");
 

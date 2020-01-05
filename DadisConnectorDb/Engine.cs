@@ -25,7 +25,7 @@ namespace DadisConnectorDb
             using (MySqlConnection connection = new MySqlConnection(ConnectionString))
             {
                 connection.Open();
-                MySqlCommand command = new MySqlCommand(query, connection);
+                MySqlCommand command = new MySqlCommand(query.ToLower(), connection);
 
                 
                 MySqlDataReader reader = command.ExecuteReader();
@@ -47,7 +47,7 @@ namespace DadisConnectorDb
             using (MySqlConnection connection = new MySqlConnection(ConnectionString))
             {
                 connection.Open();
-                MySqlCommand command = new MySqlCommand(instruction, connection);
+                MySqlCommand command = new MySqlCommand(instruction.ToLower(), connection);
                 resultado = command.ExecuteNonQuery();
                 connection.Close();
             }

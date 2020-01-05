@@ -154,7 +154,7 @@ namespace DadisService.Service
             comando.Append("insert into mensajesForo ");
             comando.Append(" (titulo, mensaje, idusuarioalta, fechaAlta, idmensajepadre) ");
             comando.Append(" values ");
-            comando.Append(" ('" + mensaje.Titulo + "','" + mensaje.Mensaje + "', "+ mensaje.IdUsuarioAlta + ", CURDATE(), "+(mensaje.IdMensajePadre != 0 ? mensaje.IdMensajePadre : idMensajeNuevo) + " ) ");
+            comando.Append(" ('" + mensaje.Titulo + "','" + mensaje.Mensaje + "', "+ mensaje.IdUsuarioAlta + ", NOW(), "+(mensaje.IdMensajePadre != 0 ? mensaje.IdMensajePadre : idMensajeNuevo) + " ) ");
 
             int resultado = engine.Execute(comando.ToString());
 
@@ -175,7 +175,7 @@ namespace DadisService.Service
             comando.Append("update mensajesforo set ");
             comando.Append("titulo = '" + mensaje.Titulo + "'");
             comando.Append(", mensaje = '" + mensaje.Mensaje + "'");
-            comando.Append(", fechamodificacion =  CURDATE()");
+            comando.Append(", fechamodificacion =  NOW()");
             comando.Append(", idusuariomodificacion = " + mensaje.IdUsuarioModificacion);
             comando.Append(" where id=" + mensaje.Id);
 
@@ -192,7 +192,7 @@ namespace DadisService.Service
 
             StringBuilder comando = new StringBuilder();
             comando.Append("update mensajesforo set ");
-            comando.Append("FechaBaja = CURDATE() ");
+            comando.Append("FechaBaja = NOW() ");
             comando.Append(" where id in ");
             comando.Append(" (");
 

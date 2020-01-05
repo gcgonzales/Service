@@ -5,9 +5,9 @@ using System.Web;
 
 namespace DadisService.Models
 {
-    public class ApuntadoQuedada
+    public class Apuntado
     {
-        public ApuntadoQuedada()
+        public Apuntado()
         {
            // usuario = new Usuario();
             ApuntadosAdultos = 0;
@@ -17,11 +17,16 @@ namespace DadisService.Models
         public int Id { get; set; }
 
         public int IdUsuario { get; set; }
-        
+
+        public int IdQuedada { get; set; }
+
+        public int IdContratacion { get; set; }
+
+        public int IdOfertaAccesorio { get; set; }
+
         public string NombreUsuario { get; set; }
 
         public string RutaFotoApuntado { get; set; }
-        //public Usuario usuario;
 
         public int ApuntadosAdultos { get; set; }
         public int ApuntadosNinos { get; set; }

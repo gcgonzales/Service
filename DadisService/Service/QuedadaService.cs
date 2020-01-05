@@ -21,7 +21,7 @@ namespace DadisService.Service
 
             StringBuilder query = new StringBuilder();
 
-            query.Append("select quedadas.Id, quedadas.Titulo, quedadas.Resumen, quedadas.Descripcion, quedadas.IdUsuarioAlta, quedadas.FechaAlta ");
+            query.Append("select quedadas.Id, quedadas.Titulo, quedadas.Resumen, quedadas.Descripcion, quedadas.Locacion, quedadas.IdUsuarioAlta, quedadas.FechaAlta ");
             query.Append(" , autor.Id as IdAutor, autor.Nombres, autor.Apellido1, autor.Apellido2 ");
             query.Append(" from quedadas");
             query.Append(" inner join usuarios autor on quedadas.IdUsuarioAlta = autor.Id ");
@@ -42,12 +42,14 @@ namespace DadisService.Service
                 quedadaFila.Titulo = dr["Titulo"].ToString();
                 quedadaFila.Resumen = dr["Resumen"].ToString();
                 quedadaFila.Descripcion = dr["Descripcion"].ToString();
+                quedadaFila.Locacion = dr["Locacion"].ToString();
                 quedadaFila.Autor = dr["Nombres"].ToString() + " " + dr["Apellido1"].ToString() + " " + dr["Apellido2"].ToString();
                 quedadaFila.IdUsuarioAlta = int.Parse(dr["IdUsuarioAlta"].ToString());                
                 quedadaFila.FechaAlta = DateTime.Parse(dr["FechaAlta"].ToString());
                 quedadaFila.RutaFotoAutor = new FotografiaService().ObtenerFotoPrincipal(quedadaFila.IdUsuarioAlta).RutaFoto;
                 quedadaFila.RutaFotoPrincipal = new FotografiaService().ObtenerFotoPrincipalQuedada(quedadaFila.Id).RutaFoto;
                 quedadaFila.Fotografias = new FotografiaService().ObtenerFotosQuedadas(quedadaFila.Id);
+                quedadaFila.Apuntados = GetApuntadosQuedada(quedadaFila.Id);
                 resultado.Add(quedadaFila);
             }
 
@@ -94,9 +96,9 @@ namespace DadisService.Service
             return resultado;
         }
 
-        public List<ApuntadoQuedada> GetApuntadosQuedada(int idQuedada)
+        public List<Apuntado> GetApuntadosQuedada(int idQuedada)
         {
-            List<ApuntadoQuedada> resultado = new List<ApuntadoQuedada>();
+            List<Apuntado> resultado = new List<Apuntado>();
 
             string connectionString = ConfigurationManager.AppSettings["ConnectionString"].ToString();
             Engine engine = new Engine(connectionString);
@@ -107,13 +109,13 @@ namespace DadisService.Service
             query.Append(" , autor.Id as IdAutor, autor.Nombres, autor.Apellido1, autor.Apellido2 ");
             query.Append(" from registrosusuariosquedadas");
             query.Append(" inner join usuarios autor on registrosusuariosquedadas.IdUsuario = autor.Id ");
-            query.Append("where quedadas.Id = " + idQuedada);
+            query.Append("where registrosusuariosquedadas.IdQuedada = " + idQuedada);
 
             DataTable table = engine.Query(query.ToString());
 
             foreach (DataRow dr in table.Rows)
             {
-                ApuntadoQuedada filaApuntado = new ApuntadoQuedada();
+                Apuntado filaApuntado = new Apuntado();
                 filaApuntado.Id = int.Parse(dr["Id"].ToString());
                 filaApuntado.IdUsuario = int.Parse(dr["IdAutor"].ToString());
                 filaApuntado.ApuntadosAdultos = int.Parse(dr["ApuntadosAdultos"].ToString());
@@ -138,13 +140,11 @@ namespace DadisService.Service
             string connectionString = ConfigurationManager.AppSettings["ConnectionString"].ToString();
             Engine engine = new Engine(connectionString);
 
-            int idMensajeNuevo = CommonService.GetLastIdFromTable("quedadas") + 1;
-
             StringBuilder comando = new StringBuilder();
             comando.Append("insert into quedadas ");
             comando.Append(" (titulo, resumen, descripcion, locacion, maximoasistentes, fechaquedada, idusuarioalta, fechaAlta) ");
             comando.Append(" values ");
-            comando.Append(" ('" + quedada.Titulo + "','" + quedada.Resumen + "','" + quedada.Descripcion + "', '" + quedada.Locacion  + "', " + quedada.MaximoAsistentes + ", '" +  quedada.FechaEvento.ToString("yyyy-MM-dd HH:mm:ss") + "', " + quedada.IdUsuarioAlta + ", CURDATE()) ");
+            comando.Append(" ('" + quedada.Titulo + "','" + quedada.Resumen + "','" + quedada.Descripcion + "', '" + quedada.Locacion  + "', " + quedada.MaximoAsistentes + ", '" +  quedada.FechaEvento.ToString("yyyy-MM-dd HH:mm:ss") + "', " + quedada.IdUsuarioAlta + ", NOW()) ");
 
             int resultado = engine.Execute(comando.ToString());
 
@@ -168,7 +168,7 @@ namespace DadisService.Service
             comando.Append(", descripcion = '" + quedada.Descripcion + "'");
             comando.Append(", locacion = '" + quedada.Locacion + "'");
             comando.Append(", fechaquedada = '" + quedada.FechaEvento.ToString("yyyy-MM-dd HH:mm:ss") + "'");
-            comando.Append(", fechamodificacion =  CURDATE()");
+            comando.Append(", fechamodificacion =  NOW()");
             comando.Append(", idusuariomodificacion = " + quedada.IdUsuarioModificacion);
             comando.Append(" where id=" + quedada.Id);
 
@@ -184,7 +184,7 @@ namespace DadisService.Service
 
             StringBuilder comando = new StringBuilder();
             comando.Append("update quedadas set ");
-            comando.Append("FechaBaja = CURDATE() ");
+            comando.Append("FechaBaja = NOW() ");
             comando.Append(" where id in ");
             comando.Append(" (");
 
@@ -204,5 +204,48 @@ namespace DadisService.Service
 
             return resultado;
         }
+
+        public int ApuntarseQuedada(Apuntado apunte)
+        {
+            int idGenerado = 0;
+            
+            string connectionString = ConfigurationManager.AppSettings["ConnectionString"].ToString();
+            Engine engine = new Engine(connectionString);
+
+            StringBuilder comando = new StringBuilder();
+            comando.Append("insert into registrosusuariosquedadas ");
+            comando.Append(" (idusuario, idquedada, apuntadosadultos, apuntadosninos, fechaalta, idusuarioalta) ");
+            comando.Append(" values ");
+            comando.Append(" (" + apunte.IdUsuario + "," + apunte.IdQuedada + "," + apunte.ApuntadosAdultos + ", " + apunte.ApuntadosNinos + ", NOW(), " + apunte.IdUsuario + ") ");
+
+            int resultado = engine.Execute(comando.ToString());
+
+            if (resultado > 0)
+            {
+                idGenerado = CommonService.GetLastIdFromTable("registrosusuariosquedadas");
+            }
+
+            return idGenerado;
+        }
+
+        public int DesapuntarseQuedada(Apuntado apunte)
+        {
+            string connectionString = ConfigurationManager.AppSettings["ConnectionString"].ToString();
+            Engine engine = new Engine(connectionString);
+
+            StringBuilder comando = new StringBuilder();
+            comando.Append("update registrosusuariosquedadas set ");
+            comando.Append("FechaBaja = NOW() ");
+            comando.Append(" where idQuedada = " + apunte.IdQuedada);
+            comando.Append(" and idUsuario = " + apunte.IdUsuario);
+
+            int resultado = engine.Execute(comando.ToString());
+
+            return resultado;
+        }
+
+
+      
+
     }
 }

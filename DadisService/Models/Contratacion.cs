@@ -5,25 +5,25 @@ using System.Web;
 
 namespace DadisService.Models
 {
-    public class Quedada
+    public class Contratacion
     {
         public int Id { get; set; }
 
         public string Titulo { get; set; }
 
-        public string Resumen { get; set; }
-
         public string Descripcion { get; set; }
 
         public string Locacion { get; set; }
 
-        public int MaximoAsistentes { get; set; }
+        public int MaximoHijos { get; set; }
 
-        public DateTime FechaEvento { get; set; }
+        public string PrecioTotal { get; set; }
 
-        public int HoraEvento { get; set; }
+        public DateTime FechaContratacion { get; set; }
 
-        public int MinutoEvento { get; set; }
+        public int HoraContratacion { get; set; }
+
+        public int MinutoContratacion { get; set; }
 
         public string Autor { get; set; }
 
@@ -43,9 +43,8 @@ namespace DadisService.Models
 
         public int IdUsuarioBaja { get; set; }
 
-        public List<Fotografia> Fotografias { get; set; } 
+        public List<Fotografia> Fotografias { get; set; }
 
         public List<Apuntado> Apuntados { get; set; }
-      
     }
 }

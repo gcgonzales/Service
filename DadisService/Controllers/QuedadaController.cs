@@ -77,6 +77,31 @@ namespace DadisService.Controllers
             return quedadaGuardado.Id;
         }
 
+        [Route("api/Quedada/Apuntarse")]
+        [HttpPost]
+        public int Apuntarse(Apuntado value)
+        {
+            int resultado = 0;
+
+            // usuarioGuardado.Id = int.Parse(DateTime.Now.Ticks.ToString().Substring(0, 5));
+            QuedadaService quedadaService = new QuedadaService();
+            resultado = quedadaService.ApuntarseQuedada(value);
+
+            return resultado;
+        }
+
+        [Route("api/Quedada/Desapuntarse")]
+        [HttpPost]
+        public int Desapuntarse(Apuntado value)
+        {
+            int resultado = 0;
+
+            QuedadaService quedadaService = new QuedadaService();
+            resultado = quedadaService.DesapuntarseQuedada(value);
+
+            return resultado;
+        }
+
         [Route("api/Quedada/GetQuedada")]
         [HttpGet]
         public Quedada GetQuedada(int id)

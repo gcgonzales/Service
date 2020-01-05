@@ -15,6 +15,10 @@ namespace DadisService.Models
 
         public int IdQuedada { get; set; }
 
+        public int IdContratacion { get; set; }
+
+        public int IdAccesorio { get; set; }
+
         public string RutaFoto { get; set; }
 
         public DateTime FechaAlta { get; set; }

@@ -107,13 +107,27 @@ namespace DadisService.Controllers
             return nuevoUsuario.Id;
         }
 
+        [Route("api/Usuarios/EnviarMensaje")]
         [HttpPost]
-        public int EnviarMensaje(int idUsuarioEmisor, int idUsuarioReceptor, string mensaje)
+        public int EnviarMensaje(MensajeUsuario mensaje)
         {
-            Usuario nuevoUsuario = new Usuario();
+            int resultado = 0;
+            MensajeService mensajeService = new MensajeService();
+            resultado = mensajeService.CrearMensaje(mensaje);
+            return resultado;
+        }
 
-            nuevoUsuario.Id = int.Parse(DateTime.Now.Ticks.ToString().Substring(0, 5));
-            return nuevoUsuario.Id;
+
+        [Route("api/Usuarios/GetMensajes")]
+        [HttpGet]
+        public List<MensajeUsuario> GetMensajes(int idUsuarioSesion, int idUsuario)
+        {
+            List<MensajeUsuario> mensajes = new List<MensajeUsuario>();
+
+            MensajeService mensajeService = new MensajeService();
+            mensajes = mensajeService.GetMensajes(idUsuarioSesion, idUsuario);
+
+            return mensajes;
         }
 
         [Route("api/Usuarios/Autenticarse")]
