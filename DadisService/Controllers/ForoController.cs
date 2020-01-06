@@ -13,13 +13,7 @@ namespace DadisService.Controllers
 {
     public class ForoController : ApiController
     {
-        public string Get(int id)
-        {
-            return "value";
-        }
-
-       
-
+        
         [Route("api/Foro/GetMensajesPrincipales")]
         [HttpGet]
         public List<MensajeForo> GetMensajesPrincipales(string textoBusqueda)
@@ -84,20 +78,6 @@ namespace DadisService.Controllers
             return mensajeGuardado.Id;
         }
 
-        [Route("api/Foro/BajaMensajesForo")]
-        [HttpPost]
-        public int BajaMensajesForo(string[] idsMensajes)
-        {
-            Usuario usuarioGuardado = new Usuario();
-
-            int resultado = 0;
-
-            ForoService foroService = new ForoService();
-            resultado = foroService.BajaMensajesForo(idsMensajes);
-
-            return usuarioGuardado.Id;
-        }
-
         [HttpPost]
         public int Crear(MensajeForo value)
         {
@@ -124,6 +104,24 @@ namespace DadisService.Controllers
             nuevoMensaje.Id = int.Parse(DateTime.Now.Ticks.ToString().Substring(0, 5));
             return nuevoMensaje.Id;
         }
+
+       
+
+        [Route("api/Foro/BajaMensajesForo")]
+        [HttpPost]
+        public int BajaMensajesForo(string[] idsMensajes)
+        {
+            Usuario usuarioGuardado = new Usuario();
+
+            int resultado = 0;
+
+            ForoService foroService = new ForoService();
+            resultado = foroService.BajaMensajesForo(idsMensajes);
+
+            return usuarioGuardado.Id;
+        }
+
+     
 
 
 

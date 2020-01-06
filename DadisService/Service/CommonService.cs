@@ -118,9 +118,7 @@ namespace DadisService.Service
                 return true;
             }
             catch (Exception ex)
-            {
-                return false;
-            }
+            { return false; }
        
         }
 

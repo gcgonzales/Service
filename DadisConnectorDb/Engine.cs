@@ -20,14 +20,11 @@ namespace DadisConnectorDb
         public DataTable Query(string query)
         {
             DataTable resultado = new DataTable();
-            
 
             using (MySqlConnection connection = new MySqlConnection(ConnectionString))
             {
                 connection.Open();
                 MySqlCommand command = new MySqlCommand(query.ToLower(), connection);
-
-                
                 MySqlDataReader reader = command.ExecuteReader();
 
                 DataTable table = new DataTable("Query");
